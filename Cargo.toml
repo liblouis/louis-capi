@@ -8,7 +8,7 @@ readme = "README.md"
 license = "LGPL-2.1-or-later"
 keywords = ["braille", "liblouis", "accessibility", "ffi"]
 categories = ["accessibility", "text-processing", "external-ffi-bindings"]
-# Not released until louis-rs's ADR-0023 is accepted
+# Not on crates.io while louis-rs is a git dependency, which crates.io does not allow
 publish = false
 
 [lib]
