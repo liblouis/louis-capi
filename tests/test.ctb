@@ -1,0 +1,4 @@
+space \s 0
+lowercase a 1
+lowercase b 12
+word ab 1456

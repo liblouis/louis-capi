@@ -378,15 +378,10 @@ pub extern "C" fn louis_version() -> *const c_char {
 mod tests {
     use super::*;
 
-    const TABLE: &str = "space \\s 0\nlowercase a 1\nlowercase b 12\nword ab 1456\n";
-
-    /// A translator for a table written to a fresh directory
+    /// A translator for `tests/test.ctb`
     fn translator(direction: u32) -> *mut LouisTranslator {
-        let dir = std::env::temp_dir().join(format!("louis-capi-{}", std::process::id()));
-        std::fs::create_dir_all(&dir).unwrap();
-        std::fs::write(dir.join("test.ctb"), TABLE).unwrap();
         let table = c"test.ctb".as_ptr();
-        let path = CString::new(dir.to_str().unwrap()).unwrap();
+        let path = CString::new(concat!(env!("CARGO_MANIFEST_DIR"), "/tests")).unwrap();
         let mut out = ptr::null_mut();
         let status =
             unsafe { louis_translator_new(&table, 1, &path.as_ptr(), 1, direction, &mut out) };

@@ -9,13 +9,8 @@
 #include "louis.h"
 
 int main(void) {
-  FILE *table = fopen("target/smoke.ctb", "w");
-  assert(table);
-  fputs("space \\s 0\nlowercase a 1\nlowercase b 12\nword ab 1456\n", table);
-  fclose(table);
-
-  const char *tables[] = {"smoke.ctb"};
-  const char *search_path[] = {"target"};
+  const char *tables[] = {"test.ctb"};
+  const char *search_path[] = {"tests"};
   LouisTranslator *translator;
   LouisStatus status =
       louis_translator_new(tables, 1, search_path, 1, LOUIS_FORWARD, &translator);
