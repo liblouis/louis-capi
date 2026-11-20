@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  # louis-rs is a git dependency on main: catch its changes even when nothing changes here
+  schedule:
+    - cron: "0 5 * * 1"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Use the latest louis-rs
+      run: cargo update -p louis-rs
+    - name: Test
+      run: cargo test --verbose
+    - name: Clippy
+      run: cargo clippy --all-targets -- -D warnings
+    - name: Header is up to date
+      run: |
+        cargo install cbindgen --version 0.29.4 --locked
+        cbindgen --config cbindgen.toml --output include/louis.h
+        git diff --exit-code include/louis.h
+    - name: C smoke test
+      run: |
+        cargo build
+        cc -Wall -Wextra -Werror -std=c99 -I include tests/smoke.c -L target/debug -llouis_capi -o target/smoke
+        LD_LIBRARY_PATH=target/debug target/smoke
+
+  miri:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: dtolnay/rust-toolchain@nightly
+      with:
+        components: miri
+    - name: Miri
+      run: cargo miri test
+      env:
+        MIRIFLAGS: -Zmiri-disable-isolation

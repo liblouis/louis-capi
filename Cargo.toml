@@ -1,0 +1,32 @@
+[package]
+name = "louis-capi"
+version = "0.1.0"
+edition = "2024"
+description = "C API for louis-rs, a pure Rust re-implementation of the liblouis braille translator"
+repository = "https://github.com/liblouis/louis-capi"
+readme = "README.md"
+license = "LGPL-2.1-or-later"
+keywords = ["braille", "liblouis", "accessibility", "ffi"]
+categories = ["accessibility", "text-processing", "external-ffi-bindings"]
+# Not released until louis-rs's ADR-0023 is accepted
+publish = false
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+# louis::VERSION is not released yet; back to `louis-rs = "0.4.1"` (or whatever has it) once it is
+louis-rs = { git = "https://github.com/liblouis/louis-rs" }
+
+# cargo-c (`cargo cinstall`) installs liblouis-rs.so, louis-rs/louis.h and louis-rs.pc.
+# The soname follows this crate's version, which changes only when the C API does.
+[package.metadata.capi.library]
+name = "louis-rs"
+
+[package.metadata.capi.header]
+name = "louis"
+subdirectory = "louis-rs"
+generation = false
+
+[package.metadata.capi.pkg_config]
+name = "louis-rs"
