@@ -40,6 +40,20 @@ Build it with `cc hello.c $(pkg-config --cflags --libs louis-rs)`.
 - A translator is immutable and can be shared between threads.
 - Every result owns its output; free it with `louis_result_free`.
 
+## Coming from liblouis
+
+| liblouis                                           | louis-rs                                                                                                                   |
+|----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| `lou_translate`, `lou_translateString`             | `louis_translator_new(…, LOUIS_FORWARD, …)` once, then `louis_translate` for each string                                   |
+| `lou_backTranslateString`                          | the same with a `LOUIS_BACKWARD` translator                                                                                |
+| `lou_getTable`, `lou_checkTable`                   | `louis_translator_new` and its status                                                                                      |
+| `lou_setDataPath`, `lou_getDataPath`               | the `search_path` argument; give the tables directory itself, not the data path that liblouis appends `liblouis/tables` to |
+| `LOUIS_TABLEPATH` (comma-separated)                | `LOUIS_TABLE_PATH` (separated like `PATH`); without it, tables are looked up in the current directory                      |
+| `lou_version`                                      | `louis_version`                                                                                                            |
+| `lou_free`                                         | `louis_translator_free`; there is no global cache                                                                          |
+| `lou_charSize`, `dotsIO`, `ucBrl`, sizing `outlen` | gone: text is UTF-8, braille is always Unicode braille, and the result owns its output                                     |
+| `typeform`                                         | not yet, see below                                                                                                         |
+
 ## What is missing
 
 The API covers what the C consumers of liblouis need today, BRLTTY and TalkBack:
