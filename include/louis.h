@@ -44,8 +44,8 @@ typedef enum LouisStatus {
   LOUIS_INTERNAL_ERROR = 4,
 } LouisStatus;
 
-// The result of [`louis_translate`]. It owns its output; free it with
-// [`louis_result_free`].
+// The result of `louis_translate`. It owns its output; free it with
+// `louis_result_free`.
 typedef struct LouisResult LouisResult;
 
 // Compiled tables for one direction. Immutable: one translator can be used from any
@@ -60,8 +60,8 @@ extern "C" {
 // and store the translator in `*out`.
 //
 // Tables are looked up in the `n_paths` directories of `search_path`, or, if
-// `search_path` is NULL, in those of the `LOUIS_TABLE_PATH` environment variable. All
-// strings are NUL-terminated UTF-8.
+// `search_path` is NULL, in those of the `LOUIS_TABLE_PATH` environment variable, or in
+// the current directory if it is not set. All strings are NUL-terminated UTF-8.
 //
 // Returns `LOUIS_TABLE_ERROR` or `LOUIS_COMPILE_ERROR` if the tables are broken; this
 // takes the place of liblouis's `lou_checkTable`. On failure, `*out` is NULL.
@@ -81,23 +81,26 @@ enum LouisStatus louis_translator_new(const char *const *tables,
 //
 // # Safety
 //
-// `translator` comes from [`louis_translator_new`] and is not used afterwards.
+// `translator` comes from `louis_translator_new` and is not used afterwards.
 void louis_translator_free(struct LouisTranslator *translator);
 
 // Translate the `len` bytes of UTF-8 at `input` with the `LOUIS_*` mode bits in `modes`,
-// and store the result in `*out`.
+// and store the result in `*out`. `input` may be NULL if `len` is 0. Modes for the
+// other direction are ignored.
 //
 // Braille is Unicode braille: the dot pattern of a cell `c` is `c - 0x2800`, which is
 // what liblouis's `dotsIO` gives. If `cursor` is not NULL, it is a character position
-// in the input, and [`louis_result_cursor`] gives its position in the output.
+// in the input, and `louis_result_cursor` gives its position in the output. A cursor
+// past the end of the input is taken as the end.
 //
 // Fails only on invalid arguments (NULL pointers, input that is not UTF-8, unknown
 // modes); translation itself always succeeds. On failure, `*out` is NULL.
 //
 // # Safety
 //
-// `translator` comes from [`louis_translator_new`], `input` points to `len` readable
-// bytes, `cursor` is NULL or valid, and `out` is a valid pointer.
+// `translator` comes from `louis_translator_new`, `input` points to `len` readable
+// bytes (or is NULL if `len` is 0), `cursor` is NULL or valid, and `out` is a valid
+// pointer.
 enum LouisStatus louis_translate(const struct LouisTranslator *translator,
                                  const char *input,
                                  size_t len,
@@ -106,43 +109,45 @@ enum LouisStatus louis_translate(const struct LouisTranslator *translator,
                                  struct LouisResult **out);
 
 // The output as NUL-terminated UTF-8, its length in bytes without the NUL in `*len`
-// unless `len` is NULL. Valid until the result is freed.
+// unless `len` is NULL. Valid until the result is freed. If `result` is NULL, the
+// output is "".
 //
 // # Safety
 //
-// `result` comes from [`louis_translate`] and `len` is NULL or valid.
+// `result` is NULL or comes from `louis_translate`, and `len` is NULL or valid.
 const char *louis_result_output(const struct LouisResult *result, size_t *len);
 
 // For each output character, the position of the input character it was translated
-// from; their number in `*len`. Positions count characters, not bytes. Valid until the
-// result is freed.
+// from; their number in `*len` unless `len` is NULL. Positions count characters, not
+// bytes. Valid until the result is freed. If `result` is NULL, there are none.
 //
 // # Safety
 //
-// `result` comes from [`louis_translate`] and `len` is valid.
+// `result` is NULL or comes from `louis_translate`, and `len` is NULL or valid.
 const size_t *louis_result_input_positions(const struct LouisResult *result, size_t *len);
 
 // For each input character, the position of its translation in the output; their
-// number in `*len`. Positions count characters, not bytes. Valid until the result is
-// freed.
+// number in `*len` unless `len` is NULL. Positions count characters, not bytes. Valid
+// until the result is freed. If `result` is NULL, there are none.
 //
 // # Safety
 //
-// `result` comes from [`louis_translate`] and `len` is valid.
+// `result` is NULL or comes from `louis_translate`, and `len` is NULL or valid.
 const size_t *louis_result_output_positions(const struct LouisResult *result, size_t *len);
 
-// Whether a cursor was given; if so, its position in the output in `*cursor`.
+// Whether a cursor was given; if so, its position in the output in `*cursor` unless
+// `cursor` is NULL. False if `result` is NULL.
 //
 // # Safety
 //
-// `result` comes from [`louis_translate`] and `cursor` is valid.
+// `result` is NULL or comes from `louis_translate`, and `cursor` is NULL or valid.
 bool louis_result_cursor(const struct LouisResult *result, size_t *cursor);
 
 // Free a result. NULL is ignored.
 //
 // # Safety
 //
-// `result` comes from [`louis_translate`] and is not used afterwards.
+// `result` comes from `louis_translate` and is not used afterwards.
 void louis_result_free(struct LouisResult *result);
 
 // Why the last call on this thread failed, or NULL if it did not. Valid until the
