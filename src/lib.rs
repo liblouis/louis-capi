@@ -397,7 +397,8 @@ pub extern "C" fn louis_last_error() -> *const c_char {
     LAST_ERROR.with(|last| last.borrow().as_ref().map_or(ptr::null(), |m| m.as_ptr()))
 }
 
-/// The version of louis-rs, such as "0.4.0".
+/// The version of louis-rs, such as "0.4.0". This is not the version of the C API,
+/// which is in the soname and in `pkg-config --modversion louis-rs`.
 #[unsafe(no_mangle)]
 pub extern "C" fn louis_version() -> *const c_char {
     static VERSION: LazyLock<CString> = LazyLock::new(|| CString::new(louis::VERSION).unwrap());

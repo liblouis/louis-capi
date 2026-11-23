@@ -154,7 +154,8 @@ void louis_result_free(struct LouisResult *result);
 // next `louis_*` call on this thread.
 const char *louis_last_error(void);
 
-// The version of louis-rs, such as "0.4.0".
+// The version of louis-rs, such as "0.4.0". This is not the version of the C API,
+// which is in the soname and in `pkg-config --modversion louis-rs`.
 const char *louis_version(void);
 
 #ifdef __cplusplus
