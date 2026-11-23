@@ -24,6 +24,9 @@ cbindgen --config cbindgen.toml --output include/louis.h   # regenerate header (
 # C smoke test against the built library:
 cargo build && cc -Wall -Wextra -Werror -std=c99 -I include tests/smoke.c \
   -L target/debug -llouis_capi -o target/smoke && LD_LIBRARY_PATH=target/debug target/smoke
+# after changing the cargo-c metadata in Cargo.toml, and before a release (not in CI):
+cargo cinstall --prefix /tmp/louis --libdir /tmp/louis/lib
+# expect include/louis-rs/louis.h, lib/liblouis-rs.so, lib/pkgconfig/louis-rs.pc (Cflags -I${includedir})
 ```
 
 `include/louis.h` is generated from `src/lib.rs` doc comments and signatures and
