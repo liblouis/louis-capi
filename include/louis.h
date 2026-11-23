@@ -89,8 +89,10 @@ void louis_translator_free(struct LouisTranslator *translator);
 //
 // Braille is Unicode braille: the dot pattern of a cell `c` is `c - 0x2800`, which is
 // what liblouis's `dotsIO` gives. If `cursor` is not NULL, it is a character position
-// in the input, and [`louis_result_cursor`] gives its position in the output. On
-// failure, `*out` is NULL.
+// in the input, and [`louis_result_cursor`] gives its position in the output.
+//
+// Fails only on invalid arguments (NULL pointers, input that is not UTF-8, unknown
+// modes); translation itself always succeeds. On failure, `*out` is NULL.
 //
 // # Safety
 //
