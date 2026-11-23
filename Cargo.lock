@@ -85,7 +85,7 @@ dependencies = [
 [[package]]
 name = "louis-rs"
 version = "0.4.0"
-source = "git+https://github.com/liblouis/louis-rs#ecbc169a77b29338127013690c8c0a42f5f240d1"
+source = "git+https://github.com/liblouis/louis-rs#645cd6911105a523bf9f32c45bb69a09218ee7fd"
 dependencies = [
  "enumset",
  "log",

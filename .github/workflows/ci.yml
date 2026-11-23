@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+    # what a fresh clone builds
+    - name: Build with the committed Cargo.lock
+      run: cargo build --locked
     - name: Use the latest louis-rs
       run: cargo update -p louis-rs
     - name: Test
