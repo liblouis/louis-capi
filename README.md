@@ -6,22 +6,35 @@ re-implementation of the liblouis braille translator. It is a C API of its own
 [ADR-0023](https://github.com/liblouis/louis-rs/blob/main/doc/adr/0023-c-api.org)
 for why, and for how to move from liblouis.
 
-Not released yet: it covers what BRLTTY and TalkBack need, see below.
+Not released yet. It covers what BRLTTY and TalkBack need; see below.
 
 ```c
+#include <stdio.h>
 #include <louis-rs/louis.h>
 
-const char *tables[] = {"en-us-g2.ctb"};
-LouisTranslator *translator;
-if (louis_translator_new(tables, 1, NULL, 0, LOUIS_FORWARD, &translator) != LOUIS_OK)
-  fprintf(stderr, "%s\n", louis_last_error());
+int main(void) {
+  /* looked up in the directories of LOUIS_TABLE_PATH, as search_path is NULL */
+  const char *tables[] = {"en-us-g2.ctb"};
+  LouisTranslator *translator;
+  if (louis_translator_new(tables, 1, NULL, 0, LOUIS_FORWARD, &translator) != LOUIS_OK) {
+    fprintf(stderr, "%s\n", louis_last_error());
+    return 1;
+  }
 
-LouisResult *result;
-louis_translate(translator, "hello", 5, 0, NULL, &result);
-puts(louis_result_output(result, NULL));   /* ⠓⠑⠇⠇⠕ */
-louis_result_free(result);
-louis_translator_free(translator);
+  LouisResult *result;
+  if (louis_translate(translator, "hello", 5, 0, NULL, &result) != LOUIS_OK) {
+    fprintf(stderr, "%s\n", louis_last_error());
+    louis_translator_free(translator);
+    return 1;
+  }
+  puts(louis_result_output(result, NULL));   /* ⠓⠑⠇⠇⠕ */
+  louis_result_free(result);
+  louis_translator_free(translator);
+  return 0;
+}
 ```
+
+Build it with `cc hello.c $(pkg-config --cflags --libs louis-rs)`.
 
 - Text is UTF-8, braille is Unicode braille: a cell's dots are `c - 0x2800`.
 - A translator is immutable and can be shared between threads.
