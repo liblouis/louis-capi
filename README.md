@@ -79,8 +79,13 @@ Not in louis-rs yet either:
 ## Building
 
 `cargo build` builds `liblouis_capi.so` and `.a`. With
-[cargo-c](https://github.com/lu-zero/cargo-c), `cargo cinstall` installs
-`liblouis-rs.so`, `louis-rs/louis.h` and `louis-rs.pc`. The soname and the pkg-config
+[cargo-c](https://github.com/lu-zero/cargo-c),
+
+```sh
+cargo cinstall --prefix /usr/local
+```
+
+installs `liblouis-rs.so`, `louis-rs/louis.h` and `louis-rs.pc`. The soname and the pkg-config
 version are those of the C API, which changes only when the API does; `louis_version()`
 gives the version of louis-rs.
 
