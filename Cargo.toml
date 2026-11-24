@@ -8,15 +8,12 @@ readme = "README.md"
 license = "LGPL-2.1-or-later"
 keywords = ["braille", "liblouis", "accessibility", "ffi"]
 categories = ["accessibility", "text-processing", "external-ffi-bindings"]
-# Not on crates.io while louis-rs is a git dependency, which crates.io does not allow
-publish = false
 
 [lib]
 crate-type = ["cdylib", "staticlib", "rlib"]
 
 [dependencies]
-# louis::VERSION is not released yet; back to `louis-rs = "0.4.1"` (or whatever has it) once it is
-louis-rs = { git = "https://github.com/liblouis/louis-rs" }
+louis-rs = "0.4.1"
 
 [features]
 # cargo-c builds with this feature and refuses a crate without it

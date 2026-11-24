@@ -10,8 +10,8 @@ API (see louis-rs ADR-0023). Scope is what BRLTTY and TalkBack need; features ar
 only when a C consumer asks (the README's "What is missing" lists the gaps — keep it in
 sync when adding functions).
 
-louis-rs is a git dependency on its `main` branch, so this crate is `publish = false`.
-CI runs `cargo update -p louis-rs` first, so upstream changes can break the build here.
+louis-rs is a crates.io dependency (`0.4.1`). CI runs `cargo update -p louis-rs` first, so a
+new compatible louis-rs release can break the build here.
 
 ## Commands
 
