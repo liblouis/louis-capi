@@ -6,7 +6,7 @@ re-implementation of the liblouis braille translator. It is a C API of its own
 [ADR-0023](https://github.com/liblouis/louis-rs/blob/main/doc/adr/0023-c-api.org)
 for why, and for how to move from liblouis.
 
-Not released yet. It covers what BRLTTY and TalkBack need; see below.
+It covers what BRLTTY and TalkBack need; see below.
 
 ```c
 #include <stdio.h>
