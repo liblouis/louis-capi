@@ -95,4 +95,7 @@ date, runs the tests under Miri and compiles `tests/smoke.c` against the library
 
 ## License
 
-LGPL-2.1-or-later, like louis-rs.
+Copyright (C) 2026 Swiss Library for the Blind, Visually Impaired
+and Print Disabled
+
+Licensed under LGPL-2.1-or-later, like louis-rs. See [LICENSE](LICENSE).
